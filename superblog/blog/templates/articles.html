@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{post.title}}</h1>
+<small>by: {{post.author}} </small>
+<small>{{post.date}}</small>
+{% if user.is_authenticated %}
+{% if user.id == post.author.id %}
+ <a href="{% url 'edit_post' post.pk %}" >Edit</a><hr>
+{% endif%}
+{% endif%}
+
+<br>
+<div class="row justify-content-md-center">
+{% if post.header_image%}
+
+<img src="{{post.header_image.url}}" class="img-thumbnail" height="
+600" width="600">
+
+{% endif%}
+<br>
+<br>
+<div class="w-50 p-1000 " style="font-family:Serif">
+<p >{{post.body|safe}}</p>
+</div>
+</div>
+<hr>
+
+<br>
+<br>
+{% if user.is_authenticated %}
+<form action="{% url 'like_post' post.pk %}" method="POST">
+ {% csrf_token%}
+ {% if liked%}
+ <button type="submit", name="post_id",
+         value = "{{post.id}}",
+         class="btn btn-danger btn-sm">Unlike
+ </button>
+{% else %}
+ <button type="submit", name="post_id",
+         value = "{{post.id}}",
+         class="btn btn-primary btn-sm">Like
+ </button>
+ {% endif%}
+ - {{total_like}} Like
+
+</form>
+{% else%}
+
+<small><a href="{% url 'login'%}">Login</a> to like and comment </small>
+- {{total_like}} Like
+{%endif%}
+<hr>
+<br>
+<h2> Comments ...</h2>
+<br>
+<br>
+<small><a href="{% url 'add_comment' post.pk%}">add comment</a> to like and comment </small>
+{% if not post.comments.all%}
+No comments yet
+{% else%}
+
+ {% for comment in post.comments.all%}
+<br>
+  <strong>
+   {{comment.name}}
+   {{comment.date_added}}
+  </strong>
+
+<br>
+
+{{comment.body}}
+{% endfor%}
+{% endif%}
+<hr>
+
+{% endblock %}
