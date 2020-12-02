@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+{% if category%}
+
+<h1>{{cats}}</h1>
+
+{% for  post in category %}
+
+     <div class="card" style="width: 50rem;">
+  <div class="card-body">
+      <div class="media">
+    <div class="media-body">
+         <h5 class="card-title"><a href="{%url 'article' post.pk %}" >{{post.title}}</a></h5>
+    <h6 class="card-subtitle mb-2 text-muted"></a>author: {{post.author}}</li></h6>
+     <p class="card-text text-muted ">{{post.snippet}}</p>
+  </div>
+   {% if post.header_image%}
+<img src="{{post.header_image.url}}" class="ml-3 rounded" width="120" height="120" >
+{% endif%}
+</div>
+
+
+     {% if user.is_authenticated %}
+     {% if user.id == post.author.id %}
+      <a href="{% url 'edit_post' post.pk %}" class="card-link">Edit</a>
+    <a href="{% url 'delete_post' post.pk %}" class="card-link">Delete</a>
+       {% endif%}
+    {% endif%}
+  </div>
+</div>
+<br>
+{%endfor%}
+
+{% else%}
+<strong>no articles </strong>
+
+{% endif%}
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static%}
+{% block content %}
+
+
+{% for  post in object_list %}
+<div  class="row justify-content-md-center ">
+    <div class="card shadow p-3 mb-5 bg-white rounded" style="width: 60rem;">
+  <div class="card-body">
+      <div class="media">
+    <div class="media-body">
+         <h5 class="card-title ">
+
+             {% if post.author.profile.profile_pic.url%}
+             <img src="{{post.author.profile.profile_pic.url}} " class="ml-3 rounded border" width="60" height="50" >
+             {% else %}
+             <img src="{%static 'blog/images/profile_pic.png'%}" class="ml-3 rounded border" width="60" height="55" >
+             {% endif%}
+             <a class="text-info"  href="{%url 'article' post.pk %}" > {{post.title}}</a></h5>
+    <h6 class="card-subtitle mb-2 text-muted"> author: {{post.author}}</h6>
+     <p class="card-text text-dark ">{{post.snippet}}</p>
+  </div>
+   {% if post.header_image%}
+<img src="{{post.header_image.url}}" class="ml-3 rounded" width="120" height="120" >
+{% endif%}
+</div>
+
+
+     {% if user.is_authenticated %}
+     {% if user.id == post.author.id %}
+      <a href="{% url 'edit_post' post.pk %}" class="card-link">Edit</a>
+    <a href="{% url 'delete_post' post.pk %}" class="card-link">Delete</a>
+       {% endif%}
+    {% endif%}
+  </div>
+</div>
+    </div>
+
+{%endfor%}
+
+
+{% endblock %}
